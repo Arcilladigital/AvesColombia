@@ -1,9 +1,9 @@
-const cacheName = " Digital clay-Aves Aumentadas-0.1.0";
+const cacheName = " Digital clay-Aves Colombia-0.1.0";
 const contentToCache = [
-    "Build/Build.loader.js",
-    "Build/Build.framework.js.unityweb",
-    "Build/Build.data.unityweb",
-    "Build/Build.wasm.unityweb",
+    "Build/ForGitAves2.loader.js",
+    "Build/ForGitAves2.framework.js.unityweb",
+    "Build/ForGitAves2.data.unityweb",
+    "Build/ForGitAves2.wasm.unityweb",
     "TemplateData/style.css"
 
 ];
