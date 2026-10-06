@@ -32,6 +32,40 @@
         onchange="SelectCam()"></select>
       <p style="text-align: center; width:min(60vw, 60vh);">Esta experiencia de realidad aumentada requiere acceso a la cámara</p>
       <button id="startARButton" onclick="StartAR()" style="visibility: hidden">INICIAR</button>
+<script>
+const COOLDOWN_MINUTES = 15; // puedes ajustar este valor
+const STORAGE_KEY = "lastClickTimestamp";
+
+document.getElementById("startARButton").addEventListener("click", async () => {
+  const lastClick = localStorage.getItem(STORAGE_KEY);
+  const now = Date.now();
+
+  // Verificar cooldown
+  if (lastClick && (now - parseInt(lastClick)) < COOLDOWN_MINUTES * 60 * 1000) {
+    console.log("Cooldown activo, no se registra evento.");
+    return;
+  }
+
+  try {
+    const res = await fetch("https://ipapi.co/json/");
+    const data = await res.json();
+
+    // Registrar evento en GA4
+    gtag('event', 'camera_permission_click', {
+      city: data.city,
+      country: data.country_name,
+      timestamp: new Date().toISOString()
+    });
+
+    console.log("Evento registrado:", data.city, data.country_name);
+
+    // Guardar timestamp para cooldown
+    localStorage.setItem(STORAGE_KEY, now.toString());
+  } catch (err) {
+    console.error("Error obteniendo ubicación:", err);
+  }
+});
+</script>
       <div id="spinner" 
         style="position: absolute; left: 50%; bottom: 40%; transform: translateX(-50%);
               border: 5px solid rgba(255,255,255,0.2); border-top: 5px solid white;
@@ -384,5 +418,15 @@
           INTERNAL_SMOOTHFACTOR_POS: .075,
       }
     </script>
+
+	<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-QH2HNV2X96"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-QH2HNV2X96');
+</script>
+
   </body>
 </html>
