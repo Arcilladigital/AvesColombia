@@ -24,6 +24,7 @@
   <body>
     <!--IMAGETARGETS-->
 		<imagetarget id='BlackTracker' src='targets/BlackTracker.jpg'></imagetarget>
+		<imagetarget id='WhiteTracker' src='targets/WhiteTracker.jpg'></imagetarget>
 
     <video id="webcam-video" muted autoplay playsinline style="width:1px;position:absolute"></video>
     <canvas id="video-canvas" style="width:100%; height:100%; object-fit:cover; position:absolute"></canvas>
@@ -31,34 +32,27 @@
       <select id="chooseCamSel" style="display: none; background: transparent; border: .05vh solid white; border-radius: max(0.5vw, 0.5vh); color:white; font-size: max(1.5vw, 1.5vh); position: absolute; bottom: 80px" 
         onchange="SelectCam()"></select>
       <p style="text-align: center; width:min(60vw, 60vh);">Esta experiencia de realidad aumentada requiere acceso a la cámara</p>
-      <button id="startARButton" onclick="StartAR()" style="visibility: hidden">INICIAR</button>
 <script>
 const COOLDOWN_MINUTES = 15; // puedes ajustar este valor
 const STORAGE_KEY = "lastClickTimestamp";
-
 document.getElementById("startARButton").addEventListener("click", async () => {
   const lastClick = localStorage.getItem(STORAGE_KEY);
   const now = Date.now();
-
   // Verificar cooldown
   if (lastClick && (now - parseInt(lastClick)) < COOLDOWN_MINUTES * 60 * 1000) {
     console.log("Cooldown activo, no se registra evento.");
     return;
   }
-
   try {
     const res = await fetch("https://ipapi.co/json/");
     const data = await res.json();
-
     // Registrar evento en GA4
     gtag('event', 'camera_permission_click', {
       city: data.city,
       country: data.country_name,
       timestamp: new Date().toISOString()
     });
-
     console.log("Evento registrado:", data.city, data.country_name);
-
     // Guardar timestamp para cooldown
     localStorage.setItem(STORAGE_KEY, now.toString());
   } catch (err) {
@@ -66,7 +60,7 @@ document.getElementById("startARButton").addEventListener("click", async () => {
   }
 });
 </script>
-
+      <button id="startARButton" onclick="StartAR()" style="visibility: hidden">INICIAR</button>
       <div id="spinner" 
         style="position: absolute; left: 50%; bottom: 40%; transform: translateX(-50%);
               border: 5px solid rgba(255,255,255,0.2); border-top: 5px solid white;
@@ -419,7 +413,8 @@ document.getElementById("startARButton").addEventListener("click", async () => {
           INTERNAL_SMOOTHFACTOR_POS: .075,
       }
     </script>
-<!-- Google tag (gtag.js) -->
+    </script>
+	<!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-QH2HNV2X96"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
